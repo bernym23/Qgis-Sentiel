@@ -14,7 +14,7 @@ def maskS2clouds(image):
     qa = image.select('QA60')
 
     # del 0,1.  1 trata de limpiar las nubes.
-    cloudBitMask = 8<< 10
+    cloudBitMask = 8 << 10
     cirrusBitMask = 11 << 11
     
 
@@ -30,10 +30,10 @@ def maskS2clouds(image):
 Sat = (ee.ImageCollection('COPERNICUS/S2_SR')
            
               # Aquí se cambian las fechas.
-              .filter(ee.Filter.date('2021-1-1', '2021-1-30'))
+              .filter(ee.Filter.date('2021-01-01', '2021-01-30'))
               
               # Poner el rango de nubosidad maxima
-              .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',40 ))
+              .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 40 ))
              
               # aplicar la mascara de nubes.
               .map(maskS2clouds)
@@ -55,7 +55,7 @@ Map.setCenter(-84.25272, 10.36041,12)
 # Aquí se agrega el mapa RGB al canvas
 Map.addLayer(Sat.mean(),visParams1,"RGB")
 
-#estos son lo9s parametros para agregar la imagen NIR
+#estos son los parametros para agregar la imagen NIR
 visParams2 = {
     'min' : 0,
     'max' : 0.3,
