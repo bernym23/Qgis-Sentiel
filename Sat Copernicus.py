@@ -4,6 +4,12 @@
 #llamado al plugin
 import ee
 
+#Nos autenticamos
+ee.Authenticate()
+
+#Iniziamos el plugin
+ee.Initialize()
+
 #Llamado dentro del plugin al mapa
 from ee_plugin import Map
 
