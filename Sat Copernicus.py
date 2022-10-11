@@ -1,13 +1,11 @@
-##Importante antes de iniciar, recordar instalar los plugin Google earth Engine y Google earth Engine Data Catalog, registrarse con su cuenta de Google. 
-
 
 #llamado al plugin
 import ee
 
-#Nos autenticamos
+#Para autenticar ejecutamos
 ee.Authenticate()
 
-#Iniziamos el plugin
+#Para iniciar el plugin
 ee.Initialize()
 
 #Llamado dentro del plugin al mapa
@@ -15,14 +13,13 @@ from ee_plugin import Map
 
 #Aplicar la funcion de la mascara de nube
 def maskS2clouds(image):
-    
-    #La banda QA60 es la banda de las nubes
+    #Se seleciiona la banda de mascara de nubes
     qa = image.select('QA60')
 
     # del 0,1.  1 trata de limpiar las nubes.
-    cloudBitMask = 8 << 10
+    cloudBitMask =8<< 10
     cirrusBitMask = 11 << 11
-    
+    #esto lo tiene que arreglar, forma de concatenar en phython#
 
     # las 2 en cero quiere decir que esta "despejado"
     mask = qa.bitwiseAnd(cloudBitMask).eq(0),
@@ -32,15 +29,13 @@ def maskS2clouds(image):
     return image.updateMask(mask).divide(10000)
 
 
-# llamada a las imagenes de Sat
+#llamada a la coleccion, vamos a declarar la variable Sat.
 Sat = (ee.ImageCollection('COPERNICUS/S2_SR')
            
               # Aquí se cambian las fechas.
-              .filter(ee.Filter.date('2021-01-01', '2021-01-30'))
-              
+              .filter(ee.Filter.date('2022-5-1', '2022-5-28'))
               # Poner el rango de nubosidad maxima
-              .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 40 ))
-             
+              .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',40 ))
               # aplicar la mascara de nubes.
               .map(maskS2clouds)
              )
@@ -55,7 +50,7 @@ visParams1 = {
     'max' : 0.3,
     'bands' : ['B4', 'B3', 'B2']}
 
-#Aquí se ponen las coordendas y el zoom para centrar el mapa  
+#Aquí se centra el mapa en Venecia, con un zoom de 12   
 Map.setCenter(-84.25272, 10.36041,12)
 
 # Aquí se agrega el mapa RGB al canvas
@@ -70,6 +65,24 @@ visParams2 = {
 #con esto agregamos el mapa NIR al Canvas 
 Map.addLayer(Sat.mean(),visParams2,"NIR") 
 
-#Ejecutar y visualizar el resultado en el panel de capas
 
 
+#Vamos a calcular el NDVI
+
+#Aquí hago un llamado al la imagen y lso filtros que puse anteriormente, recordemos que 'sat' es la variable de la imagen satelital
+Tiempo1b = Sat.reduce(ee.Reducer.median());
+
+
+#Calculamos el NDVI
+NDVI1 = Tiempo1b.normalizedDifference (['B8_median', 'B4_median']);
+
+
+#Vamos a darle color
+visParams3 = {
+  'max' : 1.0,
+  'min' : 0,
+  'palette' : ['CE7E45', 'DF923D', 'F1B555', 'FCD163', '99B718', '74A901', '66A000', '529400', '3E8601',
+    '207401', '056201', '004C00', '023B01', '012E01', '011D01', '011301']
+}
+#Agregamos al canvas como otro layer y le ponemos como nombre NDVI
+Map.addLayer (NDVI1,visParams3, 'NDVI');
