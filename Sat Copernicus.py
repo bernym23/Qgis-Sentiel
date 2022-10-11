@@ -69,7 +69,7 @@ Map.addLayer(Sat.mean(),visParams2,"NIR")
 
 #Vamos a calcular el NDVI
 
-#Aquí hago un llamado al la imagen y lso filtros que puse anteriormente, recordemos que 'sat' es la variable de la imagen satelital
+#Aquí hago un llamado a la imagen y uso filtros que puse anteriormente, recordemos que 'sat' es la variable de la imagen satelital
 Tiempo1b = Sat.reduce(ee.Reducer.median());
 
 
