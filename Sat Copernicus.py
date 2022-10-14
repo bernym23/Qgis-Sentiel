@@ -1,4 +1,3 @@
-
 #llamado al plugin
 import ee
 
@@ -40,10 +39,7 @@ Sat = (ee.ImageCollection('COPERNICUS/S2_SR')
               .map(maskS2clouds)
              )
 
- 
-
 #Aquí se cambian las bandas a visualizar
-
 #Bandas 4,3,2 son imagenes en RGB
 visParams1 = {
     'min' : 0,
@@ -66,9 +62,7 @@ visParams2 = {
 Map.addLayer(Sat.mean(),visParams2,"NIR") 
 
 
-
 #Vamos a calcular el NDVI
-
 #Aquí hago un llamado a la imagen y uso filtros que puse anteriormente, recordemos que 'sat' es la variable de la imagen satelital
 Tiempo1b = Sat.reduce(ee.Reducer.median());
 
