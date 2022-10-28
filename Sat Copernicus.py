@@ -1,4 +1,4 @@
-#Script para obtener imagenes del Sentinel 2 En Qgia utilizando Google Earth Engine.
+#Script para obtener imagenes del Sentinel 2 En Qgis utilizando Google Earth Engine.
 
 #llamado al plugin
 import ee
