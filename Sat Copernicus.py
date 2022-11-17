@@ -1,4 +1,4 @@
-#Este script nos permite cargar imagenes Sentinel 2 al Canvas de Qgis, utilizando Google Earth Engine y Python
+#Este script nos permite cargar imagenes Sentinel 2 al Canvas de Qgis, utilizando Google Earth Engine y Python#
 
 #llamado al plugin
 import ee
@@ -14,13 +14,13 @@ from ee_plugin import Map
 
 #Aplicar la funcion de la mascara de nube
 def maskS2clouds(image):
-    #Se seleciiona la banda de mascara de nubes
+    #Seleccionamos la banda de mascara de nubes
     qa = image.select('QA60')
 
     # del 0,1.  1 trata de limpiar las nubes.
     cloudBitMask = 8 << 10
     cirrusBitMask = 11 << 11
-    #esto lo tiene que arreglar, forma de concatenar en phython#
+    #######esto lo tiene que arreglar, forma de concatenar en phython#######
 
     # las 2 en cero quiere decir que esta "despejado"
     mask = qa.bitwiseAnd(cloudBitMask).eq(0),
@@ -28,7 +28,6 @@ def maskS2clouds(image):
     
     #Aquí se devuelve el valor de las mascaras
     return image.updateMask(mask).divide(10000)
-
 
 #llamada a la coleccion, vamos a declarar la variable Sat.
 Sat = (ee.ImageCollection('COPERNICUS/S2_SR')
@@ -74,12 +73,15 @@ NDVI1 = Tiempo1b.normalizedDifference (['B8_median', 'B4_median']);
 visParams3 = {
   'min' : 0,
   'max' : 1.0,
-  
-  'palette' : ['CE7E45', 'DF923D', 'F1B555', 'FCD163', '99B718', '74A901', '66A000', '529400', '3E8601',
+   'palette' : ['CE7E45', 'DF923D', 'F1B555', 'FCD163', '99B718', '74A901', '66A000', '529400', '3E8601',
     '207401', '056201', '004C00', '023B01', '012E01', '011D01', '011301']
 }
+
 #Agregamos al canvas como otro layer y le ponemos como nombre NDVI
 Map.addLayer (NDVI1,visParams3, 'NDVI');
 
-#Aquí se centra el mapa en Venecia, con un zoom de 12   
+#Aquí se centra el mapa con un zoom de 12   
 Map.setCenter(-84.25272, 10.36041,12)
+
+
+# Hecho el  ♥ por Berny Monge Castro, Sep,2022 #
