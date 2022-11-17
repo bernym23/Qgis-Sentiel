@@ -1,10 +1,8 @@
-#Script para obtener imagenes del Sentinel 2 En Qgis utilizando Google Earth Engine.
-
 #llamado al plugin
 import ee
 
 #Para autenticar ejecutamos
-ee.Authenticate()
+#ee.Authenticate()
 
 #Para iniciar el plugin
 ee.Initialize()
@@ -20,6 +18,7 @@ def maskS2clouds(image):
     # del 0,1.  1 trata de limpiar las nubes.
     cloudBitMask = 8 << 10
     cirrusBitMask = 11 << 11
+    #esto lo tiene que arreglar, forma de concatenar en phython#
 
     # las 2 en cero quiere decir que esta "despejado"
     mask = qa.bitwiseAnd(cloudBitMask).eq(0),
@@ -30,17 +29,14 @@ def maskS2clouds(image):
 
 
 #llamada a la coleccion, vamos a declarar la variable Sat.
-
-#Para imagenes anteriores al 2022 usar
 Sat = (ee.ImageCollection('COPERNICUS/S2_SR')
-       
 #Para imagenes del 2022 en adelante usar
-Sat = (ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
+#Sat = (ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
            
               # Aquí se cambian las fechas.
-              .filter(ee.Filter.date('2021-6-1', '2021-6-30'))
+              .filter(ee.Filter.date('2021-8-1', '2021-8-30'))
               # Poner el rango de nubosidad maxima
-              .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',65 ))
+              .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',50 ))
               # aplicar la mascara de nubes.
               .map(maskS2clouds)
              )
@@ -73,7 +69,8 @@ Map.addLayer(Sat.mean(),visParams2,"NIR")
 
 #Vamos a calcular el NDVI
 
-#Aquí hago un llamado a la imagen y uso filtros que puse anteriormente, recordemos que 'sat' es la variable de la imagen satelital
+#Aquí hago un llamado a la imagen y uso filtros que puse anteriormente
+#recordemos que 'sat' es la variable de la imagen satelital
 Tiempo1b = Sat.reduce(ee.Reducer.median());
 
 
@@ -92,5 +89,5 @@ visParams3 = {
 #Agregamos al canvas como otro layer y le ponemos como nombre NDVI
 Map.addLayer (NDVI1,visParams3, 'NDVI');
 
-#Aquí se centra el mapa puedes poner la coordenada que quieras, con un zoom de 12   
+#Aquí se centra el mapa en Venecia, con un zoom de 12   
 Map.setCenter(-84.25272, 10.36041,12)
