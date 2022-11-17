@@ -1,8 +1,10 @@
+#Este script nos permite cargar imagenes Sentinel 2 al Canvas de Qgis.
+
 #llamado al plugin
 import ee
 
-#Para autenticar ejecutamos
-#ee.Authenticate()
+#Para autenticar ejecutamos, solo se hace una vez
+ee.Authenticate()
 
 #Para iniciar el plugin
 ee.Initialize()
@@ -41,8 +43,6 @@ Sat = (ee.ImageCollection('COPERNICUS/S2_SR')
               .map(maskS2clouds)
              )
 
- 
-
 #Aquí se cambian las bandas a visualizar
 
 #Bandas 4,3,2 son imagenes en RGB
@@ -50,9 +50,6 @@ visParams1 = {
     'min' : 0,
     'max' : 0.3,
     'bands' : ['B4', 'B3', 'B2']}
-
-
-
 # Aquí se agrega el mapa RGB al canvas
 Map.addLayer(Sat.mean(),visParams1,"RGB")
 
@@ -61,11 +58,8 @@ visParams2 = {
     'min' : 0,
     'max' : 0.5,
     'bands' : ['B6', 'B3', 'B2']}
- 
-#con esto agregamos el mapa NIR al Canvas 
+ #con esto agregamos el mapa NIR al Canvas 
 Map.addLayer(Sat.mean(),visParams2,"NIR") 
-
-
 
 #Vamos a calcular el NDVI
 
@@ -73,10 +67,8 @@ Map.addLayer(Sat.mean(),visParams2,"NIR")
 #recordemos que 'sat' es la variable de la imagen satelital
 Tiempo1b = Sat.reduce(ee.Reducer.median());
 
-
 #Calculamos el NDVI
 NDVI1 = Tiempo1b.normalizedDifference (['B8_median', 'B4_median']);
-
 
 #Vamos a darle color
 visParams3 = {
