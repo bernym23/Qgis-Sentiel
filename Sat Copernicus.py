@@ -1,4 +1,4 @@
-#Este script nos permite cargar imagenes Sentinel 2 al Canvas de Qgis.
+#Este script nos permite cargar imagenes Sentinel 2 al Canvas de Qgis, utilizando Google Earth Engine y Python
 
 #llamado al plugin
 import ee
