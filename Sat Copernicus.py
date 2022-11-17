@@ -1,4 +1,4 @@
-#Este script nos permite cargar imagenes Sentinel 2 al Canvas de Qgis, utilizando Google Earth Engine y Python#
+#****Este script nos permite cargar imagenes Sentinel 2 al Canvas de Qgis, utilizando Google Earth Engine y Python***#
 
 #llamado al plugin
 import ee
@@ -17,10 +17,10 @@ def maskS2clouds(image):
     #Seleccionamos la banda de mascara de nubes
     qa = image.select('QA60')
 
-    # del 0,1.  1 trata de limpiar las nubes.
+    #los numeros mas bajos me dan mayor limpieza de nubosidad.
     cloudBitMask = 8 << 10
     cirrusBitMask = 11 << 11
-    #######esto lo tiene que arreglar, forma de concatenar en phython#######
+    #****esto lo tiene que arreglar, forma de concatenar en phython****#
 
     # las 2 en cero quiere decir que esta "despejado"
     mask = qa.bitwiseAnd(cloudBitMask).eq(0),
@@ -31,7 +31,8 @@ def maskS2clouds(image):
 
 #llamada a la coleccion, vamos a declarar la variable Sat.
 Sat = (ee.ImageCollection('COPERNICUS/S2_SR')
-#Para imagenes del 2022 en adelante usar
+
+#Para imagenes del 2022 en adelante usar (quitar el #)
 #Sat = (ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
            
               # Aquí se cambian las fechas.
@@ -49,6 +50,7 @@ visParams1 = {
     'min' : 0,
     'max' : 0.3,
     'bands' : ['B4', 'B3', 'B2']}
+
 # Aquí se agrega el mapa RGB al canvas
 Map.addLayer(Sat.mean(),visParams1,"RGB")
 
@@ -57,7 +59,8 @@ visParams2 = {
     'min' : 0,
     'max' : 0.5,
     'bands' : ['B6', 'B3', 'B2']}
- #con esto agregamos el mapa NIR al Canvas 
+
+#con esto agregamos el mapa NIR al Canvas 
 Map.addLayer(Sat.mean(),visParams2,"NIR") 
 
 #Vamos a calcular el NDVI
