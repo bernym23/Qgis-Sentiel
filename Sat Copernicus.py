@@ -20,7 +20,6 @@ def maskS2clouds(image):
     #los numeros mas bajos me dan mayor limpieza de nubosidad.
     cloudBitMask = 8 << 10
     cirrusBitMask = 11 << 11
-    #****esto lo tiene que arreglar, forma de concatenar en phython****#
 
     # las 2 en cero quiere decir que esta "despejado"
     mask = qa.bitwiseAnd(cloudBitMask).eq(0).And(qa.bitwiseAnd(cirrusBitMask).eq(0))
