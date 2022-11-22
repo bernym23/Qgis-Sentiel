@@ -23,8 +23,7 @@ def maskS2clouds(image):
     #****esto lo tiene que arreglar, forma de concatenar en phython****#
 
     # las 2 en cero quiere decir que esta "despejado"
-    mask = qa.bitwiseAnd(cloudBitMask).eq(0),
-    (qa.bitwiseAnd(cirrusBitMask).eq(0));
+    mask = qa.bitwiseAnd(cloudBitMask).eq(0).And(qa.bitwiseAnd(cirrusBitMask).eq(0))
     
     #Aquí se devuelve el valor de las mascaras
     return image.updateMask(mask).divide(10000)
