@@ -85,4 +85,4 @@ Map.addLayer (NDVI1,visParams3, 'NDVI');
 Map.setCenter(-84.25272, 10.36041,12)
 
 
-# Hecho el  ♥ por Berny Monge Castro, Sep,2022 #
+#Berny Monge Castro, Sep,2022#
