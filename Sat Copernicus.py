@@ -39,7 +39,8 @@ Sat = (ee.ImageCollection('COPERNICUS/S2_SR')
               .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',50 ))
               # aplicar la mascara de nubes.
               .map(maskS2clouds)
-             )
+              #Recortamos el resultado (en este caso es solo Costa Rica)
+              .filterBounds(ee.Geometry.BBox(-87.391732,7.462142,-82.034863,11.541207)))
 
 #Aquí se cambian las bandas a visualizar
 
