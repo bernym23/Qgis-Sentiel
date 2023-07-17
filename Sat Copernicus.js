@@ -41,6 +41,11 @@ var visParams1 = {
 //Aquí se agrega el mapa RGB al canvas
 Map.addLayer(Sat.mean(),visParams1,"RGB")
 
+//Agregamos una capa nueva con el valor minimo de pixel
+var min = Sate.min()
+//La agregamos seguiendo las bandas de visParams1 que es la RGB media
+Map.addLayer(min,visParams1,"Valor Minimo RGB")
+
 //estos son los parametros para agregar la imagen NIR
 var visParams2 = {
     'min' : 0,
