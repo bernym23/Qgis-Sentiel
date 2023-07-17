@@ -53,6 +53,10 @@ visParams1 = {
 # Aquí se agrega el mapa RGB al canvas
 Map.addLayer(Sat.mean(),visParams1,"RGB")
 
+#Agregamos un layer de valor minimo al canvas
+min = Sat.min()
+Map.addLayer(min,visParams1,"Valor Minimo RGB")
+
 #estos son los parametros para agregar la imagen NIR
 visParams2 = {
     'min' : 0,
