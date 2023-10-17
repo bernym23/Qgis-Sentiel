@@ -4,8 +4,8 @@ function maskS2clouds(image) {
      var qa = image.select('QA60')
 
     //los numeros mas bajos me dan mayor limpieza de nubosidad.
-    var cloudBitMask = 10 << 10
-    var cirrusBitMask = 11 << 11
+    var cloudBitMask = 20 << 10
+    var cirrusBitMask = 20 << 11
 
     //las 2 en cero quiere decir que esta "despejado"
   var  mask = qa.bitwiseAnd(cloudBitMask).eq(0)
@@ -15,19 +15,20 @@ function maskS2clouds(image) {
     return image.updateMask(mask).divide(10000)}
 
 //llamada a la coleccion, vamos a declarar la variable Sat.
-//var Sat = (ee.ImageCollection('COPERNICUS/S2_SR')
+//var Sate = (ee.ImageCollection('COPERNICUS/S2_SR')
 
-//Para imagenes del 2022 en adelante usar (quitar el #)
-var Sat = (ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
+//Para imagenes del 2022 en adelante usar (quitar el //)
+var Sate = (ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
            
               // Aquí se cambian las fechas.
-              .filter(ee.Filter.date('2022-1-1', '2022-11-27'))
+              .filter(ee.Filter.date('2023-9-15', '2023-10-15'))
               //Poner el rango de nubosidad maxima
-              .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',30 ))
+              .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',40))
               //aplicar la mascara de nubes.
               .map(maskS2clouds)
               //Recortamos
               .filterBounds(ee.Geometry.BBox(-87.391732,7.462142,-82.034863,11.541207))
+                
              )
 
 //Aquí se cambian las bandas a visualizar
@@ -36,29 +37,27 @@ var Sat = (ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
 var visParams1 = {
     'min' : 0,
     'max' : 0.3,
-    'bands' : ['B4', 'B3', 'B2']}
+    'bands' : ['B4', 'B3', 'B2']};
 
 //Aquí se agrega el mapa RGB al canvas
-Map.addLayer(Sat.mean(),visParams1,"RGB")
+Map.addLayer(Sate.mosaic(),visParams1,"RGB");
 
-//Agregamos una capa nueva con el valor minimo de pixel
-//La agregamos seguiendo las bandas de visParams1 que es la RGB media
-Map.addLayer(Sat.min(),visParams1,"Valor Minimo RGB")
+Map.addLayer(Sate.min(),visParams1,"Valor Minimo RGB");
 
 //estos son los parametros para agregar la imagen NIR
 var visParams2 = {
-    'min' : 0,
+   'min' : 0,
     'max' : 0.5,
-    'bands' : ['B6', 'B3', 'B2']}
+   'bands' : ['B6', 'B3', 'B2']}
 
 //con esto agregamos el mapa NIR al Canvas 
-Map.addLayer(Sat.mean(),visParams2,"NIR") 
+Map.addLayer(Sate.min(),visParams2,"NIR") 
 
 //Vamos a calcular el NDVI
 
 //Aquí hago un llamado a la imagen y uso filtros que puse anteriormente
 //recordemos que 'sat' es la variable de la imagen satelital
-var Tiempo1b = Sat.reduce(ee.Reducer.median());
+var Tiempo1b = Sate.reduce(ee.Reducer.median());
 
 //Calculamos el NDVI
 var NDVI1 = Tiempo1b.normalizedDifference (['B8_median', 'B4_median']);
@@ -74,4 +73,26 @@ var visParams3 = {
 Map.addLayer (NDVI1,visParams3, 'NDVI');
 
 //Aquí se centra el mapa con un zoom de 12   
-//Map.setCenter(-84.25272, 10.36041,12)
+Map.setCenter(-84.25272, 10.36041,12)
+
+//Esto son los poligonos
+var table3 = ee.FeatureCollection("users/bernym/Grantotal");
+Map.addLayer(table3, {color:'blue'},"Gran Total");
+
+//Puntos de areas nuevas
+ var areasnuevas = ee.FeatureCollection([areasnuevas]);
+ //poligonos para eliminar 
+ var Eliminar = ee.FeatureCollection([Eliminar]);
+ 
+ //Exportar los puntos
+ Export.table.toDrive({
+  collection: areasnuevas,
+  description:'Areas_N_P',
+  fileFormat: 'SHP'
+});
+ //Exportar los poligonos
+ Export.table.toDrive({
+  collection: Eliminar,
+  description:'Eliminar_poligonos',
+  fileFormat: 'SHP'
+});
