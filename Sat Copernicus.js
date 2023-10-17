@@ -28,8 +28,7 @@ var Sate = (ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
               .map(maskS2clouds)
               //Recortamos
               .filterBounds(ee.Geometry.BBox(-87.391732,7.462142,-82.034863,11.541207))
-                
-             )
+                 )
 
 //Aquí se cambian las bandas a visualizar
 
